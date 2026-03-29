@@ -1,0 +1,10 @@
+id = "avalonia"
+name = "Avalonia UI"
+version = "0.0.1"
+schema_version = 1
+authors =["euphoo-01"]
+description = "Поддержка Avalonia UI и .axaml файлов"
+
+[[grammars]]
+name = "avalonia"
+path = "languages/avalonia"

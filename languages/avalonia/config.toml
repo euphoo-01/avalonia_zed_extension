@@ -1,0 +1,4 @@
+name = "avalonia"
+grammar = "xml"
+path_suffixes = ["axaml"]
+language_servers = ["avalonia-ls"]
