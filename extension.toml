@@ -6,12 +6,9 @@ authors = ["Saverin"]
 description = "Avalonia support for Zed"
 repository = "https://github.com/euphoo-01/avalonia_zed_extension"
 
+languages = ["avalonia"]
+
 [grammars.avalonia]
 repository = "https://github.com/euphoo-01/avalonia_zed_extension"
-commit = "HEAD"
-
-[languages.avalonia]
-name = "Avalonia"
-grammar = "avalonia"
-path_suffixes = ["axaml"]
-language_servers = ["avalonia-ls"]
+commit = "79ddbd98eb23868a343938cc012d05b7bcb96d30"
+path="tree-sitter-avalonia"
