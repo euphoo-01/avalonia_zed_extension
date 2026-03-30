@@ -2,7 +2,7 @@
 set -e
 
 # Build the Tree-sitter grammar
-pushd grammars/avalonia
+pushd tree-sitter-avalonia
 echo "--- Building Tree-sitter grammar ---"
 npm install
 npx tree-sitter generate
