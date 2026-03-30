@@ -1,24 +1,20 @@
 #!/bin/bash
 set -e
 
-# This script automates the build process for the Zed Avalonia extension.
-# It compiles the Rust code to wasm32-wasip1, creates the directory
-# structure Zed expects (wasm32-wasi), and copies the final binary.
+pushd grammars/avalonia
 
-# 1. Build the extension for the wasip1 target
-echo "Building extension for wasm32-wasip1..."
-cargo build --target wasm32-wasip1
+echo "--- Building Tree-sitter grammar ---"
+npm install
+npx tree-sitter generate
 
-# 2. Ensure the target directory for Zed exists
-# Zed currently expects wasm binaries in a 'wasi' subdirectory, not 'wasip1'.
-echo "Creating target directory for Zed..."
-mkdir -p target/wasm32-wasi/debug
+popd
 
-# 3. Copy the compiled .wasm file to the location Zed expects
-echo "Copying .wasm binary..."
-cp target/wasm32-wasip1/debug/avalonia_zed.wasm target/wasm32-wasi/debug/
+echo "--- Building Rust Wasm extension ---"
+cargo build --target wasm32-wasip1 --release
 
-echo ""
-echo "Build complete!"
-echo "The extension binary is now located at: target/wasm32-wasi/debug/avalonia_zed.wasm"
-echo "To apply the changes, please reload the Zed editor or the extension."
+echo "--- Moving .wasm artifact to expected location ---"
+mkdir -p target/wasm32-wasi/release
+cp target/wasm32-wasip1/release/avalonia_zed.wasm target/wasm32-wasi/release/
+
+echo "--- Build complete! ---"
+echo "The extension artifact is located at: target/wasm32-wasi/release/avalonia_zed.wasm"

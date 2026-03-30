@@ -1,4 +1,6 @@
-name = "avalonia"
-grammar = "xml"
+name = "Avalonia"
 path_suffixes = ["axaml"]
-language_servers = ["avalonia-ls"]
+block_comment = { start = "<!--", end = "-->" }
+
+[language_servers.avalonia-ls]
+name = "AvaloniaLS"
