@@ -9,3 +9,9 @@ repository = "https://github.com/euphoo-01/avalonia_zed_extension"
 [grammars.avalonia]
 repository = "https://github.com/euphoo-01/avalonia_zed_extension"
 commit = "HEAD"
+
+[languages.avalonia]
+name = "Avalonia"
+grammar = "avalonia"
+path_suffixes = ["axaml"]
+language_servers = ["avalonia-ls"]
