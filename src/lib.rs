@@ -5,6 +5,7 @@ use zed_extension_api::{self as zed, DownloadedFileType, Result};
 
 const GITHUB_REPO: &str = "euphoo-01/ls_for_avalonia";
 const LANGUAGE_SERVER_ID: &str = "avalonia-ls";
+const LOCAL_BINARY_OVERRIDE_ENV: &str = "AVALONIA_LS_BINARY";
 
 struct AvaloniaExtension {
     cached_binary_path: Option<String>,
@@ -21,6 +22,11 @@ impl AvaloniaExtension {
         &mut self,
         language_server_id: &zed::LanguageServerId,
     ) -> Result<String> {
+        if let Some(path) = Self::local_binary_override()? {
+            self.cached_binary_path = Some(path.clone());
+            return Ok(path);
+        }
+
         if let Some(path) = &self.cached_binary_path {
             if fs::metadata(path).is_ok() {
                 return Ok(path.clone());
@@ -86,6 +92,33 @@ impl AvaloniaExtension {
 
         self.cached_binary_path = Some(binary_path.clone());
         Ok(binary_path)
+    }
+
+    fn local_binary_override() -> Result<Option<String>> {
+        match std::env::var(LOCAL_BINARY_OVERRIDE_ENV) {
+            Ok(path) => {
+                let metadata = fs::metadata(&path).map_err(|error| {
+                    format!(
+                        "{} is set to {:?}, but the file is not readable: {}",
+                        LOCAL_BINARY_OVERRIDE_ENV, path, error
+                    )
+                })?;
+
+                if metadata.is_file() {
+                    Ok(Some(path))
+                } else {
+                    Err(format!(
+                        "{} is set to {:?}, but it is not a file",
+                        LOCAL_BINARY_OVERRIDE_ENV, path
+                    ))
+                }
+            }
+            Err(std::env::VarError::NotPresent) => Ok(None),
+            Err(std::env::VarError::NotUnicode(_)) => Err(format!(
+                "{} is set but is not valid UTF-8",
+                LOCAL_BINARY_OVERRIDE_ENV
+            )),
+        }
     }
 
     fn release_asset_spec() -> Result<ReleaseAssetSpec> {
@@ -188,7 +221,7 @@ impl zed::Extension for AvaloniaExtension {
         let command = self.language_server_binary_path(language_server_id)?;
         Ok(zed::Command {
             command,
-            args: vec![],
+            args: vec!["--stdio".to_string()],
             env: vec![],
         })
     }

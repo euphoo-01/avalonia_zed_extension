@@ -91,6 +91,27 @@ If metadata generation tool is not installed globally, run it from built `Soluti
 dotnet /path/to/SolutionParser.dll .
 ```
 
+## Troubleshooting `Server reset the connection`
+
+If Zed shows:
+
+- `initializing server avalonia-ls ... Server reset the connection`
+
+check `zed: open log` for `avalonia-ls` start/shutdown events.
+
+Current extension behavior:
+
+- starts the server with `--stdio` explicitly;
+- downloads release assets from `euphoo-01/ls_for_avalonia`.
+
+If upstream release `v0.1.0` still exits on your machine, run a patched local server binary and point the extension to it:
+
+```bash
+export AVALONIA_LS_BINARY=/absolute/path/to/AvaloniaLanguageServer
+```
+
+Then restart Zed. The extension will prefer `AVALONIA_LS_BINARY` over downloaded assets.
+
 ## Notes
 
 - The extension does not require a preinstalled `avalonia-ls` in `PATH`.
